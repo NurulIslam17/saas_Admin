@@ -1,11 +1,15 @@
-
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import NoPage from "./pages/NoPage";
+import Layout from "./components/layout/Layout";
 
 function App() {
   return (
-    <h1 className="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="*" element={<NoPage />} />
+      </Route>
+    </Routes>
   );
 }
 
