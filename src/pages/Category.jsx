@@ -91,12 +91,12 @@ const Category = () => {
                     <div class="flex items-center">
                       <div
                         class={`h-2.5 w-2.5 rounded-full ${
-                          category.status == "active"
+                          category.status === "active"
                             ? " bg-green-500 me-2"
                             : " bg-red-500 me-2"
                         }`}
                       ></div>
-                      {category.status == "active" ? "Active" : "Inactive"}
+                      {category.status === "active" ? "Active" : "Inactive"}
                     </div>
                   </td>
                   <td class="px-6 py-4">
