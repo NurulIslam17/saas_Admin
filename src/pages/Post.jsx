@@ -1,8 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MainHeader from "../components/MainHeader";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Post = () => {
+  const [posts, setPost] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadpost = () => {
+    axios.get("http://127.0.0.1:8000/api/posts").then((response) => {
+      setPost(response.data.data);
+      setLoading(false);
+    });
+  };
+  useEffect(() => {
+    loadpost();
+  }, []);
+
+  console.log(posts);
+
+  if (loading) {
+    return "Loading...";
+  }
+
   return (
     <>
       <MainHeader name="Post List" />
@@ -98,10 +118,13 @@ const Post = () => {
                 SL
               </th>
               <th scope="col" class="px-6 py-3">
-                Name
+                title
               </th>
               <th scope="col" class="px-6 py-3">
-                Position
+                Category
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Post By
               </th>
               <th scope="col" class="px-6 py-3">
                 Status
@@ -112,30 +135,34 @@ const Post = () => {
             </tr>
           </thead>
           <tbody>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td class="px-6 py-4">1</td>
-              <th
-                scope="row"
-                class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <div class="text-base font-semibold">Neil Sims</div>
-              </th>
-              <td class="px-6 py-4">React Developer</td>
-              <td class="px-6 py-4">
-                <div class="flex items-center">
-                  <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
-                  Online
-                </div>
-              </td>
-              <td class="px-6 py-4">
-                <Link
-                  href="#"
-                  class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit user
-                </Link>
-              </td>
-            </tr>
+            {posts &&
+              posts.map((post, index) => (
+                <tr key={index} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td class="px-6 py-4">{index+1}</td>
+                  <th
+                    scope="row"
+                    class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    <div class="text-base font-semibold">{post.title}</div>
+                  </th>
+                  <td class="px-6 py-4">{post.category.name}</td>
+                  <td class="px-6 py-4">{post.user.name}</td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div class={`h-2.5 w-2.5 rounded-full ${post.status === 'active' ? "bg-green-600" : "bg-red-600"} me-2`}></div>
+                      {post.status === 'active' ? "Active" : "Inactive"}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <Link
+                      href="#"
+                      class="bg-green-500 p-2 font-medium text-white hover:underline"
+                    >
+                      Edit
+                    </Link>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
