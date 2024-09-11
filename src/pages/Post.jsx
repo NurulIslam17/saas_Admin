@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MainHeader from "../components/MainHeader";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Loader from "../components/Loader";
 
 const Post = () => {
   const [posts, setPost] = useState([]);
@@ -18,10 +19,6 @@ const Post = () => {
   }, []);
 
   console.log(posts);
-
-  if (loading) {
-    return "Loading...";
-  }
 
   return (
     <>
@@ -135,10 +132,16 @@ const Post = () => {
             </tr>
           </thead>
           <tbody>
-            {posts &&
+            {loading ? (
+              <Loader />
+            ) : (
+              posts &&
               posts.map((post, index) => (
-                <tr key={index} class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <td class="px-6 py-4">{index+1}</td>
+                <tr
+                  key={index}
+                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  <td class="px-6 py-4">{index + 1}</td>
                   <th
                     scope="row"
                     class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
@@ -149,8 +152,14 @@ const Post = () => {
                   <td class="px-6 py-4">{post.user.name}</td>
                   <td class="px-6 py-4">
                     <div class="flex items-center">
-                      <div class={`h-2.5 w-2.5 rounded-full ${post.status === 'active' ? "bg-green-600" : "bg-red-600"} me-2`}></div>
-                      {post.status === 'active' ? "Active" : "Inactive"}
+                      <div
+                        class={`h-2.5 w-2.5 rounded-full ${
+                          post.status === "active"
+                            ? "bg-green-600"
+                            : "bg-red-600"
+                        } me-2`}
+                      ></div>
+                      {post.status === "active" ? "Active" : "Inactive"}
                     </div>
                   </td>
                   <td class="px-6 py-4">
@@ -162,7 +171,8 @@ const Post = () => {
                     </Link>
                   </td>
                 </tr>
-              ))}
+              ))
+            )}
           </tbody>
         </table>
       </div>
