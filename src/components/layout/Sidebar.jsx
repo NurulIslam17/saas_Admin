@@ -1,5 +1,5 @@
 import React from "react";
-import { Squares2X2Icon, HomeIcon, BookOpenIcon } from "@heroicons/react/24/solid";
+import { Squares2X2Icon, HomeIcon, BookOpenIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -12,6 +12,10 @@ const Sidebar = () => {
             <Link to="/" className="font-mono font-extrabold text-lg">
               Dashboard
             </Link>
+          </li>
+          <li className="flex gap-4 mb-3">
+            <UserGroupIcon className="size-6 text-black-500" />
+            <Link to="/users" className="font-mono font-extrabold text-lg">User</Link>
           </li>
           <li className="flex gap-4 mb-3">
             <Squares2X2Icon className="size-6 text-black-500" />
