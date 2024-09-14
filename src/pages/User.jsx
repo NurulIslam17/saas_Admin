@@ -1,6 +1,5 @@
 import React from "react";
 import MainHeader from "../components/MainHeader";
-import { TrashIcon, PencilIcon } from "@heroicons/react/24/solid";
 
 const User = () => {
   return (
@@ -20,6 +19,7 @@ const User = () => {
               <th>Status</th>
             </tr>
           </thead>
+          
           <tbody>
             <tr>
               <th>1</th>
