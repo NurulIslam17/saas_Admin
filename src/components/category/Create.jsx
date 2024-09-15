@@ -1,18 +1,43 @@
-import React from 'react'
+import React from "react";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 
 const Create = (props) => {
-   const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm();
-  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const saveCategory = async (data) => {
+    data.status = data.status === false ? "inactive" : "active";
+    const csrfToken = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute("content");
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/categories",
+        data,
+        {
+          headers: {
+            "X-CSRF-TOKEN": csrfToken,
+          },
+        }
+      );
+      console.log("Response:", response.data);
+      alert("Category Created successfully!");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Failed to submit form");
+    }
+  };
+
   return (
     <>
       <dialog id={props.modalOpenFor} className="modal">
         <div className="modal-box">
-          <form method="dialog" onSubmit={handleSubmit((data) => console.log(data))}>
+          <form method="dialog" onSubmit={handleSubmit(saveCategory)}>
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
               ✕
             </button>
@@ -28,11 +53,13 @@ const Create = (props) => {
                       htmlFor="category"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Name <span className='text-red-700'>*</span>
+                      Name <span className="text-red-700">*</span>
                     </label>
                     <div className="mt-2">
                       <input
-                      {...register('category', { required: true })}
+                        {...register("category", {
+                          required: "Category name is required.",
+                        })}
                         id="category"
                         name="category"
                         type="text"
@@ -40,14 +67,16 @@ const Create = (props) => {
                         placeholder="Enter Category name"
                         className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                       />
-                      {errors.category && <p className='text-red-700'>Last name is required.</p>}
+                      {errors.category && (
+                        <p className="text-red-700">Last name is required.</p>
+                      )}
                     </div>
                   </div>
 
                   <div className="relative flex gap-x-3">
                     <div className="flex h-6 items-center">
                       <input
-                      {...register('status')}
+                        {...register("status")}
                         id="status"
                         name="status"
                         type="checkbox"
@@ -79,7 +108,7 @@ const Create = (props) => {
         </div>
       </dialog>
     </>
-  )
-}
+  );
+};
 
-export default Create
+export default Create;
