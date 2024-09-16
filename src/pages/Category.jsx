@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import MainHeader from "../components/MainHeader";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
 import Create from "../components/category/Create";
@@ -14,6 +13,24 @@ const Category = () => {
       setCategories(data.data.data);
       setLoading(false);
     });
+  };
+
+  const deleteCategory = (e, id) => {
+
+    e.preventDefault();
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      alert(`Category with ID ${id} will be deleted.`);
+
+      axios
+        .delete(`http://127.0.0.1:8000/api/categories/${id}`)
+        .then((response) => {
+          console.log("Category deleted:", response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error deleting the category!", error);
+        });
+    }
+
   };
 
   useEffect(() => {
@@ -55,7 +72,7 @@ const Category = () => {
             />
           </div>
         </div>
-        { loading ? <Loader /> : ""}
+        {loading ? <Loader /> : ""}
 
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 p-5">
           <thead className="text-xs uppercase bg-gray-500 text-white">
@@ -77,13 +94,18 @@ const Category = () => {
           <tbody>
             {categories &&
               categories.map((category, index) => (
-                <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <tr
+                  key={index}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
                   <td className="px-6 py-4">{index + 1}</td>
                   <th
                     scope="row"
                     className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    <div className="text-base font-semibold">{category.name}</div>
+                    <div className="text-base font-semibold">
+                      {category.name}
+                    </div>
                   </th>
 
                   <td className="px-6 py-4">
@@ -99,12 +121,12 @@ const Category = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <Link
-                      href="#"
-                      className="font-medium text-black hover:underline bg-green-500 p-1"
+                    <button
+                      onClick={(e) => deleteCategory(e, category.id)}
+                      className="bg-red-500 p-1 text-white border-r-4"
                     >
-                      Edit user
-                    </Link>
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -112,7 +134,7 @@ const Category = () => {
         </table>
       </div>
 
-      <Create modalOpenFor="create_category"/>
+      <Create modalOpenFor="create_category" />
     </>
   );
 };
