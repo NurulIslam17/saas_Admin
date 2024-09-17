@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
 import MainHeader from "../components/MainHeader";
-import axios from "axios";
 import Loader from "../components/Loader";
 import Create from "../components/category/Create";
+import axiosInstance from "../services/axiosConfig";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const loadData = () => {
-    axios.get(`http://127.0.0.1:8000/api/categories`).then((data) => {
+    axiosInstance.get(`http://127.0.0.1:8000/api/categories`).then((data) => {
       setCategories(data.data.data);
       setLoading(false);
     });
   };
 
   const deleteCategory = (e, id) => {
-
     e.preventDefault();
     if (window.confirm("Are you sure you want to delete this category?")) {
       alert(`Category with ID ${id} will be deleted.`);
 
-      axios
+      axiosInstance
         .delete(`http://127.0.0.1:8000/api/categories/${id}`)
         .then((response) => {
           console.log("Category deleted:", response.data);
@@ -30,7 +29,6 @@ const Category = () => {
           console.error("There was an error deleting the category!", error);
         });
     }
-
   };
 
   useEffect(() => {

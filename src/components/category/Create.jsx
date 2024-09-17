@@ -3,6 +3,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 
 const Create = (props) => {
+
   const {
     register,
     handleSubmit,
@@ -11,6 +12,7 @@ const Create = (props) => {
 
   const saveCategory = async (data) => {
     data.status = data.status === false ? "inactive" : "active";
+    
     const csrfToken = document
       .querySelector('meta[name="csrf-token"]')
       .getAttribute("content");
