@@ -12,7 +12,7 @@ const MainHeader = (props) => {
 
         <div className={props.modalId ? "block" : "hidden"}>
           <h1 className="font-mono font-extrabold text-[25px] p-2">
-          <button className="btn  btn-primary text-lg font-extrabold" onClick={()=>document.getElementById(props.modalId).showModal()}>Create</button>
+          <button className="btn  btn-primary text-lg font-extrabold">Create</button>
           </h1>
         </div>
 

@@ -3,6 +3,7 @@ import MainHeader from "../components/MainHeader";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
+import Create from "../components/product/Create";
 
 const Post = () => {
   const [posts, setPost] = useState([]);
@@ -19,7 +20,7 @@ const Post = () => {
   }, []);
   return (
     <>
-      <MainHeader name="Post List" />
+      <MainHeader name="Post List"  modalId="create_product"/>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
@@ -105,7 +106,7 @@ const Post = () => {
             />
           </div>
         </div>
-        {loading ? <Loader /> : ""}
+        {loading ? <Loader /> : "" }
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 p-5">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>

@@ -5,7 +5,6 @@ const User = () => {
   return (
     <>
       <MainHeader name="User List" />
-
       <div className="overflow-x-auto shadow-slate-200 border-slate-950">
         <table className="table border-spacing-3">
           <thead className="bg-black text-yellow-50">
@@ -33,8 +32,8 @@ const User = () => {
                 </div>
               </td>
               <td>
-                <button className="btn btn-outline btn-success me-2">Edit</button>
-                <button className="btn btn-outline btn-warning me-2">Delete</button>
+                <button className="bg-blue-500 my-0 py-1 px-3 font-serif font-bold ms-2">Edit</button>
+                <button className="bg-red-500 my-0 py-1 px-3 font-serif font-bold ms-2">Delete</button>
               </td>
             </tr>
           </tbody>
