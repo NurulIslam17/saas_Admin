@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import MainHeader from "../components/MainHeader";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
-import Create from "../components/product/Create";
+import Modal from "../components/Modal";
 
 const Post = () => {
   const [posts, setPost] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+  });
 
   const loadpost = () => {
     axios.get("http://127.0.0.1:8000/api/posts").then((response) => {
@@ -15,12 +19,45 @@ const Post = () => {
       setLoading(false);
     });
   };
+
   useEffect(() => {
     loadpost();
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    setIsModalOpen(false);
+  };
+
   return (
     <>
-      <MainHeader name="Post List"  modalId="create_product"/>
+      <div className="flex justify-between mb-4 bg-slate-300 py-1">
+        <div>
+          <h1 className="font-mono font-extrabold text-[25px] p-2">
+            Post List
+          </h1>
+        </div>
+
+        <div>
+          <h1 className="font-mono font-bold text-white text-lg p-2">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-green-500 rounded-full px-3"
+            >
+              Create
+            </button>
+          </h1>
+        </div>
+      </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
@@ -106,7 +143,7 @@ const Post = () => {
             />
           </div>
         </div>
-        {loading ? <Loader /> : "" }
+        {loading ? <Loader /> : ""}
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 p-5">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -131,9 +168,7 @@ const Post = () => {
             </tr>
           </thead>
           <tbody>
-
-            {
-              posts &&
+            {posts &&
               posts.map((post, index) => (
                 <tr
                   key={index}
@@ -169,11 +204,93 @@ const Post = () => {
                     </Link>
                   </td>
                 </tr>
-              ))
-            }
+              ))}
           </tbody>
         </table>
       </div>
+
+      <Modal
+        isVisible={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        modalSize="1/2"
+      >
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4  w-full">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter post title"
+              required
+            />
+          </div>
+          <div className="flex justify-center gap-4">
+            <div className="mb-4 w-full">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Select Category
+              </label>
+              <select
+                name="service"
+                value={formData.service}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">-- Select a Category --</option>
+                <option value="web_design">Sports</option>
+                <option value="seo">Health</option>
+                <option value="marketing">Education</option>
+              </select>
+            </div>
+
+            <div className="mb-4 w-full">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Photo
+              </label>
+              <input
+                type="file"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="mb-4  w-full">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Description
+            </label>
+            <textarea
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name=""
+              id=""
+            ></textarea>
+          </div>
+
+          <div className="flex justify-between gap-10">
+            <button
+              type="reset"
+              className="px-4 py-2 bg-red-500 text-white rounded-lg w-full"
+            >
+              Reset
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-green-500 text-white rounded-lg w-full"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </Modal>
     </>
   );
 };

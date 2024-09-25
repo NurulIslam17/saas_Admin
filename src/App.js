@@ -12,11 +12,11 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/users" element={<User/>}/>
+        <Route path="/users" element={<User />} />
         <Route path="/category" element={<Category />} />
         <Route path="/post" element={<Post />} />
       </Route>
-        <Route path="*" element={<NoPage />} />
+      <Route path="*" element={<NoPage />} />
     </Routes>
   );
 }
