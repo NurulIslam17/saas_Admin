@@ -8,6 +8,7 @@ const Post = () => {
   const [posts, setPost] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addMore, setAddMore] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -273,6 +274,49 @@ const Post = () => {
               name=""
               id=""
             ></textarea>
+          </div>
+
+          <div className="mb-2">
+            <input
+              type="checkbox"
+              name="add_more"
+              onChange={() => {
+                setAddMore(setAddMore => !addMore);
+              }}
+              id="add-more"
+              className="my-3 pl-5"
+            />
+            <label htmlFor="add-more" className="ml-2">Add More Image</label>
+          </div>
+
+          <div className={addMore ? "block" : "hidden"}>
+            <div className="flex flex-row gap-3 mb-2">
+              <div className="basis-2/4">
+                <input
+                  type="text"
+                  name="name"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter post title"
+                  required
+                />
+              </div>
+              <div className="basis-2/4">
+                <input
+                  type="text"
+                  name="name"
+                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter post title"
+                  required
+                />
+              </div>
+
+              <div className="basis-1/4 justify-between">
+                <button className="bg-green-600 py-2 px-3 text-white">+</button>
+                <button className="bg-red-600 ms-3 py-2 px-3 text-white">
+                  x
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="flex justify-between gap-10">
