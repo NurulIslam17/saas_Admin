@@ -9,10 +9,9 @@ const Post = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addMore, setAddMore] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-  });
+  const [inputFields, setInputFields] = useState([
+    { id: 1, name: "", image: "" },
+  ]);
 
   const loadpost = () => {
     axios.get("http://127.0.0.1:8000/api/posts").then((response) => {
@@ -25,18 +24,35 @@ const Post = () => {
     loadpost();
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const handleAddMore = () => {
+    setAddMore((setAddMore) => !addMore);
+    setInputFields([{ id: 1, name: "", image: "" }]);
   };
 
-  const handleSubmit = (e) => {
+  const addField = (e) => {
     e.preventDefault();
-    console.log(formData);
-    setIsModalOpen(false);
+    setInputFields([
+      ...inputFields,
+      { id: inputFields.length + 1, value1: "", value2: "" },
+    ]);
+  };
+
+  const removeField = (id) => {
+    setInputFields(inputFields.filter((field) => field.id !== id));
+  };
+
+  const handleInputChange = (id, event) => {
+    const newInputFields = inputFields.map((field) => {
+      if (field.id === id) {
+        return {
+          ...field,
+          [event.target.name]: event.target.value,
+        };
+      }
+      return field;
+    });
+
+    setInputFields(newInputFields);
   };
 
   return (
@@ -215,7 +231,7 @@ const Post = () => {
         onClose={() => setIsModalOpen(false)}
         modalSize="1/2"
       >
-        <form onSubmit={handleSubmit}>
+        <form>
           <div className="mb-4  w-full">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Title
@@ -223,8 +239,6 @@ const Post = () => {
             <input
               type="text"
               name="title"
-              value={formData.title}
-              onChange={handleChange}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter post title"
               required
@@ -237,8 +251,6 @@ const Post = () => {
               </label>
               <select
                 name="service"
-                value={formData.service}
-                onChange={handleChange}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               >
@@ -256,8 +268,6 @@ const Post = () => {
               <input
                 type="file"
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your email"
                 required
@@ -280,43 +290,61 @@ const Post = () => {
             <input
               type="checkbox"
               name="add_more"
-              onChange={() => {
-                setAddMore(setAddMore => !addMore);
-              }}
+              onChange={handleAddMore}
               id="add-more"
               className="my-3 pl-5"
             />
-            <label htmlFor="add-more" className="ml-2">Add More Image</label>
+            <label htmlFor="add-more" className="ml-2">
+              Add More Image
+            </label>
           </div>
 
           <div className={addMore ? "block" : "hidden"}>
-            <div className="flex flex-row gap-3 mb-2">
-              <div className="basis-2/4">
-                <input
-                  type="text"
-                  name="name"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter post title"
-                  required
-                />
+            {inputFields.map((field) => (
+              <div className="flex flex-row w-full gap-3 mb-2" key={field.id}>
+                <div className="basis-2/5">
+                  <input
+                    type="text"
+                    name="value1"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter post title"
+                    value={field.value1}
+                    onChange={(e) => handleInputChange(field.id, e)}
+                    required
+                  />
+                </div>
+                <div className="basis-2/5">
+                  <input
+                    type="file"
+                    name="value2"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter post title"
+                    value={field.value2}
+                    onChange={(e) => handleInputChange(field.id, e)}
+                    required
+                  />
+                </div>
+                <div className="basis-1/5 gap-2">
+                  <div className="flex justify-end items-end">
+                    <button
+                      type="button"
+                      onClick={(e) => addField(e)}
+                      className="bg-green-600 py-2 px-3 text-white"
+                    >
+                      +
+                    </button>
+                    <button
+                      onClick={() => removeField(field.id)}
+                      className={`bg-red-600 py-2 px-3 text-white ${
+                        field.id == 1 ? "hidden" : ""
+                      }`}
+                    >
+                      x
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="basis-2/4">
-                <input
-                  type="text"
-                  name="name"
-                  className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter post title"
-                  required
-                />
-              </div>
-
-              <div className="basis-1/4 justify-between">
-                <button className="bg-green-600 py-2 px-3 text-white">+</button>
-                <button className="bg-red-600 ms-3 py-2 px-3 text-white">
-                  x
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
 
           <div className="flex justify-between gap-10">
