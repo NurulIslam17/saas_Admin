@@ -7,9 +7,9 @@
  }
  
  .loading-bar {
-  width: 100%; /* Full width */
+  width: 10%; /* Full width */
   height: 100%; /* Full height */
-  background: linear-gradient(90deg, #ffe816, #5dbb11, #030f2e,#ee1d4a); /* Gradient background */
+  background: rgb(12, 250, 12);
   position: absolute;
   left: -100%; /* Start position (off-screen to the left) */
   animation: slide 2s infinite linear; /* Animation settings */
@@ -24,7 +24,7 @@
      left: 0%; 
    }
    50% {
-     left: 0%; 
+     left: 50%; 
    }
 
    100% {
