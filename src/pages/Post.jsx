@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "../components/Loader";
 import Modal from "../components/Modal";
+import { useForm } from "react-hook-form";
 
 const Post = () => {
   const [posts, setPost] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addMore, setAddMore] = useState(false);
@@ -19,9 +21,15 @@ const Post = () => {
       setLoading(false);
     });
   };
+  const loadCategories = () => {
+    axios.get("http://127.0.0.1:8000/api/categories").then((response) => {
+      setCategories(response.data.data);
+    });
+  };
 
   useEffect(() => {
     loadpost();
+    loadCategories();
   }, []);
 
   const handleAddMore = () => {
@@ -53,6 +61,16 @@ const Post = () => {
     });
 
     setInputFields(newInputFields);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    console.log(data);
   };
 
   return (
@@ -231,18 +249,18 @@ const Post = () => {
         onClose={() => setIsModalOpen(false)}
         modalSize="1/2"
       >
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4  w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Title
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2"></label>
+            Title <span className="text-red-500">*</span>
             <input
               type="text"
               name="title"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter post title"
-              required
+              {...register("title", { required: true })}
             />
+            {errors.title && <p className="text-red-500">Title is required.</p>}
           </div>
           <div className="flex justify-center gap-4">
             <div className="mb-4 w-full">
@@ -250,14 +268,17 @@ const Post = () => {
                 Select Category
               </label>
               <select
-                name="service"
+                name="category_id"
+                {...register("category_id")}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
               >
-                <option value="">-- Select a Category --</option>
-                <option value="web_design">Sports</option>
-                <option value="seo">Health</option>
-                <option value="marketing">Education</option>
+                <option>-- Select a Category --</option>
+                {categories &&
+                  categories.map((category, index) => (
+                    <option value={category.id} key={index}>
+                      {category.name}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -267,10 +288,10 @@ const Post = () => {
               </label>
               <input
                 type="file"
-                name="email"
+                name="photo"
+                {...register('photo')}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your email"
-                required
               />
             </div>
           </div>
@@ -280,10 +301,27 @@ const Post = () => {
               Description
             </label>
             <textarea
+            {...register('desc')}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name=""
+              name="desc"
               id=""
             ></textarea>
+          </div>
+          <div className="mb-4  w-full">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Status
+            </label>
+
+            <div>
+              <input {...register("radio")} type="radio" value="active" />{" "}
+              Active
+              <input
+                {...register("radio")}
+                type="radio"
+                value="inactive"
+              />{" "}
+              Inactive
+            </div>
           </div>
 
           <div className="mb-2">
@@ -302,18 +340,17 @@ const Post = () => {
           <div className={addMore ? "block" : "hidden"}>
             {inputFields.map((field) => (
               <div className="flex flex-row w-full gap-3 mb-2" key={field.id}>
-                <div className="basis-2/5">
+                <div className="basis-4/9">
                   <input
                     type="text"
-                    name="value1"
+                    name="title"
                     className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter post title"
+                    placeholder="Enter image title"
                     value={field.value1}
                     onChange={(e) => handleInputChange(field.id, e)}
-                    required
                   />
                 </div>
-                <div className="basis-2/5">
+                <div className="basis-4/9">
                   <input
                     type="file"
                     name="value2"
@@ -321,11 +358,10 @@ const Post = () => {
                     placeholder="Enter post title"
                     value={field.value2}
                     onChange={(e) => handleInputChange(field.id, e)}
-                    required
                   />
                 </div>
-                <div className="basis-1/5 gap-2">
-                  <div className="flex justify-end items-end">
+                <div className="basis-1/9">
+                  <div className="flex justify-around items-end">
                     <button
                       type="button"
                       onClick={(e) => addField(e)}
@@ -336,7 +372,7 @@ const Post = () => {
                     <button
                       onClick={() => removeField(field.id)}
                       className={`bg-red-600 py-2 px-3 text-white ${
-                        field.id == 1 ? "hidden" : ""
+                        field.id === 1 ? "hidden" : ""
                       }`}
                     >
                       x

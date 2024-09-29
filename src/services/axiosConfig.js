@@ -8,11 +8,7 @@ const csrfToken = document
 
   if (csrfToken) {
     axiosInstance.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
-    console.log(csrfToken);
-    
   } else {
     console.error("CSRF token not found in meta tag.");
   }
-  
-
 export default axiosInstance;
