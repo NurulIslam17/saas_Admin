@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import MainHeader from "../components/MainHeader";
 import axiosInstance from "../services/axiosConfig";
+import Loader from "../components/Loader";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const loadData = () => {
+    setLoading(true);
     axiosInstance.get(`http://127.0.0.1:8000/api/categories`).then((data) => {
       setCategories(data.data.data);
       setLoading(false);
@@ -16,17 +18,12 @@ const Category = () => {
   useEffect(() => {
     loadData();
   }, []);
-
-  setTimeout(() => {
-    setLoading(false);
-  }, 1000);
-
   return (
     <>
       <MainHeader name="Category List" modalId="create_category" />
 
-      <div className="overflow-x-auto shadow-slate-200 border-slate-950">
-        <table className="table border-spacing-3 text-center">
+      <div className="overflow-x-auto shadow-slate-200 border-2 rounded-lg border-slate-950">
+        <table className="table border-spacing-3 text-center p-2">
           <thead className="bg-black text-yellow-50">
             <tr>
               <th>Sl</th>
@@ -35,11 +32,14 @@ const Category = () => {
               <th>Action</th>
             </tr>
           </thead>
-
-          <tbody>
-            {loading ? "Loaging..." : " "}
-
-            {categories && categories.length > 0 ? (
+          <tbody className="text-center">
+            {loading ? (
+              <tr>
+                <td colSpan="4">
+                  <Loader />
+                </td>
+              </tr>
+            ) : categories && categories.length > 0 ? (
               categories.map((category, index) => (
                 <tr key={index}>
                   <th>{index + 1}</th>
@@ -67,8 +67,11 @@ const Category = () => {
           </tbody>
         </table>
 
-        <div className="py-3 flex justify-between">
-          <div>Total Recoord : 1323</div>
+        <div className="bg-gray-400 h-1"></div>
+        <div className="py-3 px-2 flex justify-between">
+          <div className="border-spacing-y-5">
+            Total Recoord : {categories ? categories.length : 0}
+          </div>
           <div className="join">
             <input
               className="join-item btn btn-square"

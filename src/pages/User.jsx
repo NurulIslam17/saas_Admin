@@ -1,7 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MainHeader from "../components/MainHeader";
+import axios from "axios";
 
 const User = () => {
+  const [users, setUsers] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const getUsers = () => {
+    setLoading(true);
+    axios
+      .get("http://127.0.0.1:8000/api/users")
+      .then((response) => {
+        setUsers(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Something went wrong.");
+      });
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   return (
     <>
       <MainHeader name="User List" />
@@ -12,30 +33,49 @@ const User = () => {
               <th>Sl</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Phone</th>
-              <th>Profession</th>
+              <th>Type</th>
               <th>Status</th>
-              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
-          
+
           <tbody>
-            <tr>
-              <th>1</th>
-              <td>Cy Ganderton</td>
-              <td>app@gmail.com</td>
-              <td>01929123</td>
-              <td>Software Engineer</td>
-              <td>
-                <div className="badge badge-accent font-mono font-bold">
-                  Inactive
-                </div>
-              </td>
-              <td>
-                <button className="bg-blue-500 my-0 py-1 px-3 font-serif font-bold ms-2">Edit</button>
-                <button className="bg-red-500 my-0 py-1 px-3 font-serif font-bold ms-2">Delete</button>
-              </td>
-            </tr>
+            {loading
+              ? "Loading..."
+              : users &&
+                users.map((user, index) => (
+                  <tr key={index}>
+                    <th>{index + 1}</th>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      <div
+                        className={`badge badge-${
+                          user.is_active === 1 ? "primary" : "neutral"
+                        } font-mono font-bold`}
+                      >
+                        {user.is_active === 1 ? "Active" : "Inactive"}
+                      </div>
+                    </td>
+                    <td>
+                      <div
+                        className={`badge badge-${
+                          user.type === 1 ? "accent" : "warning"
+                        } font-mono font-bold`}
+                      >
+                        {user.type === 1 ? "Admin" : "User"}
+                      </div>
+                    </td>
+                    <td>
+                      <button className="bg-blue-500 badge-neutral my-0 py-1 px-3 font-serif font-bold ms-2">
+                        Edit
+                      </button>
+                      <button className="bg-red-500 my-0 py-1 px-3 font-serif font-bold ms-2">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
 

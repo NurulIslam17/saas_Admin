@@ -63,6 +63,8 @@ const Post = () => {
     setInputFields(newInputFields);
   };
 
+  console.log(inputFields);
+  
   const {
     register,
     handleSubmit,
@@ -262,6 +264,7 @@ const Post = () => {
             />
             {errors.title && <p className="text-red-500">Title is required.</p>}
           </div>
+
           <div className="flex justify-center gap-4">
             <div className="mb-4 w-full">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -289,7 +292,7 @@ const Post = () => {
               <input
                 type="file"
                 name="photo"
-                {...register('photo')}
+                {...register("photo")}
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your email"
               />
@@ -301,26 +304,34 @@ const Post = () => {
               Description
             </label>
             <textarea
-            {...register('desc')}
+              {...register("desc")}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               name="desc"
               id=""
             ></textarea>
           </div>
+
           <div className="mb-4  w-full">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Status
             </label>
 
             <div>
-              <input {...register("radio")} type="radio" value="active" />{" "}
-              Active
+              <input
+                {...register("radio")}
+                type="radio"
+                value="active"
+                id="active"
+              />
+              <label className="px-1" htmlFor="active">Active</label>
               <input
                 {...register("radio")}
                 type="radio"
                 value="inactive"
-              />{" "}
-              Inactive
+                id="inactive"
+                className="ml-4 pl-2"
+              />
+              <label htmlFor="inactive" className="px-1">Inactive</label>
             </div>
           </div>
 
@@ -362,7 +373,7 @@ const Post = () => {
                 </div>
                 <div className="basis-1/9">
                   <div className="flex justify-around items-end">
-                    <button
+                    <button 
                       type="button"
                       onClick={(e) => addField(e)}
                       className="bg-green-600 py-2 px-3 text-white"
